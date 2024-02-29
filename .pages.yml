@@ -1,23 +1,23 @@
 content:
- - name: posts
-   label: Posts
-   path: content/posts
-   type: collection
-   fields:
-    - name: title
-      label: Title
-      type: string
-    - name: description
-      label: Description
-      type: string
-    - name: date
-      label: Date
-      type: date
+  - name: posts
+    label: Posts
+    path: content/posts
+    type: collection
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: string
+      - name: date
+        label: Date
+        type: date
     view:
-    fields: [ title ]
-    primary: title
-    sort: [ date, title ]
-    default:
-      search: ''
-      sort: title
-      order: desc
+      fields: [title]
+      primary: title
+      sort: [date, title]
+      default:
+        search: ""
+        sort: title
+        order: desc
