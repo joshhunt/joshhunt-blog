@@ -26,3 +26,28 @@ content:
         search: ""
         sort: title
         order: desc
+
+  - name: pages
+    label: Pages
+    path: content/pages
+    type: collection
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: string
+      - name: body
+        label: Body
+        type: rich-text
+        options:
+          format: markdown
+    view:
+      fields: [title]
+      primary: title
+      sort: [date, title]
+      default:
+        search: ""
+        sort: title
+        order: desc

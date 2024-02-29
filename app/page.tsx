@@ -13,7 +13,6 @@ export default async function Home() {
 
   return (
     <Prose>
-      cc
       {homeContent && (
         <div className="text-lg text-zinc-900 dark:text-zinc-100">
           <Markdown content={homeContent.body} />
