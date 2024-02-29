@@ -51,3 +51,31 @@ content:
         search: ""
         sort: title
         order: desc
+
+  - name: link-posts
+    label: Link posts
+    path: content/link-posts
+    type: collection
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: link
+        label: Link
+        type: string
+      - name: date
+        label: Date
+        type: date
+      - name: body
+        label: Body
+        type: rich-text
+        options:
+          format: markdown
+    view:
+      fields: [title, link, date]
+      primary: title
+      sort: [date, title]
+      default:
+        search: ""
+        sort: title
+        order: desc

@@ -48,7 +48,27 @@ export const Post = defineDocumentType(() => ({
   computedFields,
 }));
 
+export const LinkPost = defineDocumentType(() => ({
+  name: "LinkPost",
+  filePathPattern: `link-posts/**/*.md`,
+  contentType: "markdown",
+  fields: {
+    title: {
+      type: "string",
+      required: true,
+    },
+    date: {
+      type: "date",
+      required: true,
+    },
+    link: {
+      type: "string",
+      required: true,
+    },
+  },
+}));
+
 export default makeSource({
   contentDirPath: "./content",
-  documentTypes: [Post, Page],
+  documentTypes: [Post, Page, LinkPost],
 });
