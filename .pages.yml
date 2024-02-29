@@ -3,6 +3,7 @@ content:
     label: Posts
     path: content/posts
     type: collection
+    extension: mdx
     fields:
       - name: title
         label: Title
