@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { allPages } from "contentlayer/generated";
 
-import { Mdx } from "@/components/mdx-components";
 import { Prose } from "@/components/Prose";
+import Markdown from "@/components/Markdown";
 
 interface PageProps {
   params: {
@@ -56,7 +56,7 @@ export default async function PagePage({ params }: PageProps) {
       {page.description && <p className="text-xl mt-0">{page.description}</p>}
       <hr className="my-4" />
 
-      <Mdx code={page.body.code} />
+      <Markdown content={page.body} />
     </Prose>
   );
 }

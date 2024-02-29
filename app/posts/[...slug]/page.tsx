@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { allPosts } from "contentlayer/generated";
 
-import { Mdx } from "@/components/mdx-components";
 import { Prose } from "@/components/Prose";
+import Markdown from "@/components/Markdown";
 
 interface PostProps {
   params: {
@@ -60,7 +60,7 @@ export default async function PostPage({ params }: PostProps) {
       )}
       <hr className="my-4" />
 
-      <Mdx code={post.body.code} />
+      <Markdown content={post.body} />
     </Prose>
   );
 }
