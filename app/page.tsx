@@ -13,7 +13,7 @@ export default async function Home() {
   return (
     <div className="prose dark:prose-invert">
       {homeContent && (
-        <div className="text-lg text-zinc-100">
+        <div className="text-lg text-zinc-900 dark:text-zinc-100">
           <Mdx code={homeContent.body.code} />
           <hr className="my-4" />
         </div>
