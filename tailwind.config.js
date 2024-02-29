@@ -11,6 +11,9 @@ module.exports = {
       typography: (theme) => ({
         "josh-zinc": {
           css: {
+            "blockquote p:first-of-type::before": { content: "none" },
+            "blockquote p:first-of-type::after": { content: "none" },
+
             "--tw-prose-body": theme("colors.zinc[800]"),
             "--tw-prose-headings": theme("colors.zinc[900]"),
             "--tw-prose-lead": theme("colors.zinc[600]"),
