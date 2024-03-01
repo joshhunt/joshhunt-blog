@@ -15,7 +15,7 @@ async function getHomePageContent() {
 }
 
 async function getAllContent() {
-  return [...allPosts, ...allLinkPosts].toSorted((a, b) => {
+  return [...allPosts, ...allLinkPosts].sort((a, b) => {
     return new Date(b.date) > new Date(a.date) ? -1 : 1;
   });
 }
