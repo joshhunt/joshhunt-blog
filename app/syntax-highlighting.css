@@ -1,0 +1,46 @@
+[data-rehype-pretty-code-figure] > figcaption + pre {
+  margin-top: 8px;
+}
+
+.dark [data-rehype-pretty-code-figure] pre,
+.dark [data-rehype-pretty-code-figure] pre span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+.light [data-rehype-pretty-code-figure] pre,
+.light [data-rehype-pretty-code-figure] pre span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+[data-rehype-pretty-code-figure] pre.twoslash {
+  overflow: visible;
+}
+
+/* .highlighted,
+[data-highlighted-line] {
+  margin: 0 -8px;
+  padding: 0 8px;
+}
+
+.highlighted span,
+[data-highlighted-line] span {
+  background-color: transparent !important;
+}
+
+.dark .highlighted,
+.dark [data-highlighted-line] {
+  background-color: rgba(255, 228, 230, 0.15) !important;
+}
+
+.light .highlighted,
+.light [data-highlighted-line] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+} */

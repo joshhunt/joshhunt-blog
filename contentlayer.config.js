@@ -1,4 +1,10 @@
 import { defineDocumentType, makeSource } from "contentlayer/source-files";
+import rehypePrettyCode from "rehype-pretty-code";
+import {
+  transformerNotationDiff,
+  transformerNotationHighlight,
+} from "@shikijs/transformers";
+import { transformerTwoslash } from "@shikijs/twoslash";
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const computedFields = {
@@ -71,4 +77,24 @@ export const LinkPost = defineDocumentType(() => ({
 export default makeSource({
   contentDirPath: "./content",
   documentTypes: [Post, Page, LinkPost],
+  markdown: {
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          transformers: [
+            transformerNotationDiff(),
+            transformerNotationHighlight(),
+            transformerTwoslash({
+              explicitTrigger: true,
+            }),
+          ],
+          theme: {
+            dark: "github-dark",
+            light: "github-light",
+          },
+        },
+      ],
+    ],
+  },
 });
