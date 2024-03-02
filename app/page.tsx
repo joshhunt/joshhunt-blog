@@ -5,6 +5,7 @@ import {
   Post,
   LinkPost,
 } from "@/.contentlayer/generated";
+import { FormattedDate } from "@/components/Date";
 import Markdown from "@/components/Markdown";
 import { Prose } from "@/components/Prose";
 import Link from "next/link";
@@ -54,6 +55,10 @@ function PostSummary({ post }: { post: Post }) {
         <h2 className="mt-0 mb-2">{post.title}</h2>
       </Link>
 
+      <p className="mt-0 mb-2 text-sm text-zinc-700 dark:text-zinc-200">
+        <FormattedDate date={post.date} />
+      </p>
+
       {post.description && <p className="m-0">{post.description}</p>}
     </article>
   );
@@ -72,7 +77,13 @@ function LinkPostSummary({ post }: { post: LinkPost }) {
         </Link>
       </h2>
 
-      <Markdown content={post.body} />
+      <p className="mt-0 mb-2 text-sm text-zinc-700 dark:text-zinc-200">
+        <FormattedDate date={post.date} />
+      </p>
+
+      <div>
+        <Markdown content={post.body} />
+      </div>
     </article>
   );
 }
