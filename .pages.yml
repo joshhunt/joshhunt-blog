@@ -23,7 +23,7 @@ content:
         options:
           format: markdown
     view:
-      fields: [title, date]
+      fields: [title, date, published]
       primary: title
       sort: [date, title]
       default:
@@ -79,7 +79,7 @@ content:
         options:
           format: markdown
     view:
-      fields: [title, link, date]
+      fields: [title, link, date, published]
       primary: title
       sort: [date, title]
       default:
