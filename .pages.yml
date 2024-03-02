@@ -3,6 +3,7 @@ content:
     label: Posts
     path: content/posts
     type: collection
+    filename: "{title}.md"
     fields:
       - name: title
         label: Title
@@ -13,6 +14,9 @@ content:
       - name: date
         label: Date
         type: date
+      - name: published
+        label: Published
+        type: boolean
       - name: body
         label: Body
         type: rich-text
@@ -66,6 +70,9 @@ content:
       - name: date
         label: Date
         type: date
+      - name: published
+        label: Published
+        type: boolean
       - name: body
         label: Body
         type: rich-text

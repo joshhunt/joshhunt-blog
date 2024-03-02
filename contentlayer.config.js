@@ -50,6 +50,9 @@ export const Post = defineDocumentType(() => ({
       type: "date",
       required: true,
     },
+    published: {
+      type: "boolean",
+    },
   },
   computedFields,
 }));
@@ -70,6 +73,9 @@ export const LinkPost = defineDocumentType(() => ({
     link: {
       type: "string",
       required: true,
+    },
+    published: {
+      type: "boolean",
     },
   },
 }));

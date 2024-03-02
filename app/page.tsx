@@ -15,9 +15,11 @@ async function getHomePageContent() {
 }
 
 async function getAllContent() {
-  return [...allPosts, ...allLinkPosts].sort((a, b) => {
-    return new Date(b.date) > new Date(a.date) ? -1 : 1;
-  });
+  return [...allPosts, ...allLinkPosts]
+    .sort((a, b) => {
+      return new Date(b.date) > new Date(a.date) ? -1 : 1;
+    })
+    .filter((v) => v.published);
 }
 
 export default async function Home() {
