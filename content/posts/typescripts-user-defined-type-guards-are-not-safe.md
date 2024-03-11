@@ -89,7 +89,6 @@ if (result.success) {
 }
 ```
 
-
 ## Narrowing
 
 Sometimes though your data has already been parsed, but it's still one of a few possible values (such as the first is `isDog` example). When your data is sufficiently modeled using discriminated unions, Typescript is able to just naturally narrow it down using properties that are unique between each member.
@@ -103,7 +102,7 @@ if (variable.type === "custom-variable") {
 }
 ```
 
-While I prefer this style less, you're even able to check on implicit differences between objects.
+While I prefer this style less, you're even able to check on implicit differences between objects:
 
 ```ts
 const variable: Variable = getVariable();
@@ -115,7 +114,10 @@ if ("query" in variable) {
 }
 ```
 
-Because this is checked by the type system, Typescript will be able to tell us if we've made a mistake (such as mispelling a type), or if our application changes over time.
+Because this is checked by the type system, Typescript will be able to tell us if we've made a mistake (such as mispelling a type), or spot new problems if our application changes over time.
+
+
+## Parse, don't validate
 
 
 
