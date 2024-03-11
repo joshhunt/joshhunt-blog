@@ -40,7 +40,7 @@ function isFish(pet: Fish | Bird): pet is Bird {
 }
 
 if (isFish(pet)) {
-    // We hope pet is Fish here, but when copying it into a seperate function, we accidentally made a mistake!
+    // We hope pet is Fish here, but we made a mistake when copying it
 }
 ```
 The opportunity for introducing mistakes becomes more apparent with more realistic patterns such as discriminated union with more members with similar names.
