@@ -2,7 +2,7 @@
 title: Typescript's user-defined type guards are not safe
 description: They're commonly pointed to as a safer alternative to `as` type
   assertions, but they're just as big as a type hole.
-date: 2024-02-17
+date: 2024-03-11
 published: true
 ---
 Occasionally I see people suggest [user-defined type guards](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates) (otherwise known as type predicates) as an safer alternative to `as` [type assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions). They'll see the following code and correctly identify that the `as` type assertions is unsafe and has the potential to introduce bugs:
