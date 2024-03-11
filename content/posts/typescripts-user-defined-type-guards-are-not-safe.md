@@ -51,7 +51,12 @@ type AdHocVariable = { type: 'adhoc-variable', ... };
 type MultiAdHocVariable = { type: 'multiadhoc-variable', ... };
 type CustomVariable = { type: 'custom-variable', ... };
 type ConstantVariable = { type: 'constant-variable', ... };
-type Variable = QueryVariable | AdHocVariable | MultiAdHocVariable | CustomVariable | ConstantVariable;
+type Variable =
+  | QueryVariable
+  | AdHocVariable
+  | MultiAdHocVariable
+  | CustomVariable
+  | ConstantVariable;
 
 function isCustomVariable(variable: Variable): variable is CustomVariable {
   return variable.type === "constant-variable"
