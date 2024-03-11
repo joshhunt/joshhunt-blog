@@ -23,6 +23,86 @@ This results in a function that when called, will validate and input and narrow 
 
 Unfortunately, type guards aren't actually checked by Typescript - there's no relation between pet is Dog and the implementation. It could just blindly return `true` and Typescript wouldn't care. Now all cats are dogs! User-defined type guards are a type hole that increases the chances of making a mistake and incorrectly typing data as it flows through your system. When the entire point of Typescript is to tell you where you've made a mistake, this pattern works against that.
 
+In fact, because Typescript is able to naturally narrow unions in if-statements, moving an existing check into a type guard function can _remove_ type safety. In the following code, the first example is actively checked by Typescript's type system where developer-mistakes will be caught and will catch errors as the application changes over time. The second example is suspectable to mistakes that will go uncaught until it breaks the application for users.
+
+
+``` title="better.ts"
+const pet: Fish | Bird = getPet();
+
+if ("swim" in pet) {
+    // pet has been narrowed to Fish here
+}
+```
+
+``` title="worse.ts"
+function isFish(pet: Fish | Bird): pet is Bird {
+    return "swim" in pet
+}
+
+if (isFish(pet)) {
+    // We hope pet is Fish here, but when copying it into a seperate function, we accidentally made a mistake!
+}
+```
+
+The opportunity for introducing mistakes becomes more apparent with more realistic patterns such as discriminated union with more members with similar names.
+
+```ts
+type QueryVariable = { type: 'query-variable', ... };
+type AdHocVariable = { type: 'adhoc-variable', ... };
+type MultiAdHocVariable = { type: 'multiadhoc-variable', ... };
+type CustomVariable = { type: 'custom-variable', ... };
+type ConstantVariable = { type: 'constant-variable', ... };
+type Variable = QueryVariable | AdHocVariable | MultiAdHocVariable | CustomVariable | ConstantVariable;
+
+function isCustomVariable(variable: Variable): variable is CustomVariable {
+  return variable.type === "constant-variable"
+}
+```
+
+
+So, instead of user-defined type guards, what do we do instead?
+
+## Runtime validation library
+
+Solutions such as [zod](https://zod.dev/), [io-ts](https://github.com/gcanti/io-ts), or [typia](https://typia.io/docs/validators/assert/) allow developers to validate unknown against a schema at runtime.
+
+They're most commonly used when accepting incoming untrusted data and parsing it to a known shape. 
+
+```ts
+import { z } from "zod";
+
+const CustomVariable = z.object({
+  type: z.literal("custom-variable"),
+  query: z.string()
+});
+
+const result = CustomVariable.parse({ type: "custom-variable", query: "SELECT name FROM pets" });
+
+if (result.success) {
+  // We now know that result.data is a valid CustomVariable
+}
+```
+
+
+## Narrowing
+
+Sometimes though your data has already been parsed, but it's still one of a few possible values (such as the first is `isDog` example). When your data is sufficiently modeled using discriminated unions, Typescript is able to just naturally narrow it down using properties that are unique between each member.
+
+```ts
+const variable: Variable = getVariable();
+
+if (variable.type === "custom-variable") {
+  // Typescript will narrow `variable` down to all possible types inside this clause.
+  // In this case it's just `CustomVariable`  
+}
+```
+
+
+
+
+
+-----------
+
 However, this narrowing is not actually checked by Typescript - there's no relation between `pet is Dog` and the implementation of the function. You could just blindly return `true` all the time, and Typescript would happily declare pet is a Dog!
 
 ```ts
