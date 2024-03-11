@@ -99,11 +99,10 @@ function maybeQueryVariable(input: Variable): QueryVariable | null {
     return input;
   }
 
+  // If you're feeling extra spicy, drop the `null` and just throw an exception instead!
   return null;
 }
 ```
-
-Or, if you're feeling extra spicy, drop the `null` and just throw an exception instead!
 
 Because we've specifically annotated the return value, the type system will do the work to ensure that we are correctly returning a value of that type.
 
