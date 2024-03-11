@@ -19,18 +19,21 @@ function isDog(pet: Cat | Dog): pet is Dog {
 }
 ```
 
-This results in a function that when called, will narrow the argument down to Dog. However, this narrowing is not actually checked by Typescript - there's no relation between `pet is Dog` and the implementation of the function. You could just blindly return `true` all the time, and Typescript would happily declare pet is a Dog!
- 
+This results in a function that when called, will validate and input and narrow the argument down to Dog. We're no longer just blindly trusting that pet is Dog. Problem solved, right?
+
+Unfortunately, type guards aren't actually checked by Typescript - there's no relation between pet is Dog and the implementation. It could just blindly return `true` and Typescript wouldn't care. Now all cats are dogs! User-defined type guards are a type hole that increases the chances of making a mistake and incorrectly typing data as it flows through your system. When the entire point of Typescript is to tell you where you've made a mistake, this pattern works against that.
+
+However, this narrowing is not actually checked by Typescript - there's no relation between `pet is Dog` and the implementation of the function. You could just blindly return `true` all the time, and Typescript would happily declare pet is a Dog!
+
 ```ts
 function isDog(pet: Cat | Dog): pet is Cat /* Oops! */ { 
   return "woof" in pet;
 }
-
 ```
 
 User-defined type guards are a type hole that still leaves open the chances of making a mistake and giving data an incorrect type. Mistakes could be made during implementation, or changes over time could mean that the correct check today will be wrong tomorrow and you'll have no way of knowing because it's not type checked. `pet is Dog` is just as unsafe as `pet as Dog` . When the whole point of Typescript is to have the computer _prove_ that your code is correct, using features that say "no trust me bro" erode the reliability of your code.
 
-In fact, by deleting your type guards you might actually *gain* safety. Take the following examples - the non-type guard version is type checked and will return errors if your code changes later in a way that invalidates 
+In fact, by deleting your type guards you might actually _gain_ safety. Take the following examples - the non-type guard version is type checked and will return errors if your code changes later in a way that invalidates
 
 ```ts
 const pet: Cat | Dog = getPet();
@@ -54,7 +57,7 @@ if (isCat(pet)) {
 }
 ```
 
-This type of problem is even more likely in common patterns like tagged unions, which in real world examples can have less distinctive names 
+This type of problem is even more likely in common patterns like tagged unions, which in real world examples can have less distinctive names
 
 ```ts
 type QueryVariable = { type: 'query-variable', ... };
@@ -69,7 +72,6 @@ function isCustomVariable(variable: Variable): variable is CustomVariable {
     return variable.type === "constant-variable"
 }
 ```
-
 
 * * *
 
