@@ -5,6 +5,7 @@ description: They're commonly pointed to as a safer alternative to `as` type
 date: 2024-02-17
 published: true
 ---
+
 Occasionally I see people suggest [user-defined type guards](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates) (otherwise known as type predicates) as an safer alternative to `as` [type assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions). They'll see the following code and correctly identify that the `as` type assertions is unsafe and has the potential to introduce bugs:
 
 ```ts
@@ -25,21 +26,21 @@ Unfortunately, type guards aren't actually checked by Typescript - there's no re
 
 In fact, because Typescript is able to naturally narrow unions in if-statements, moving an existing check into a type guard function can _remove_ type safety. In the following code, the first example is actively checked by Typescript's type system where developer-mistakes will be caught and will catch errors as the application changes over time. The second example is susceptible to mistakes that will go uncaught until it breaks the application for users.
 
-```ts
+```ts title="better.ts"
 const pet: Fish | Bird = getPet();
 
 if ("swim" in pet) {
-    // pet has been narrowed to Fish here
+  // pet has been narrowed to Fish!
 }
 ```
 
-```ts
+```ts title="worse.ts"
 function isFish(pet: Fish | Bird): pet is Bird {
-    return "swim" in pet
+  return "swim" in pet;
 }
 
 if (isFish(pet)) {
-    // We hope pet is Fish here, but we made a mistake when copying it
+  // We hope pet is Fish here, but we made a mistake when copying it
 }
 ```
 
@@ -78,12 +79,12 @@ import { z } from "zod";
 
 const CustomVariable = z.object({
   type: z.literal("custom-variable"),
-  query: z.string()
+  query: z.string(),
 });
 
 const result = CustomVariable.parse({
   type: "custom-variable",
-  query: "SELECT name FROM pets"
+  query: "SELECT name FROM pets",
 });
 
 if (result.success) {
@@ -100,7 +101,7 @@ const variable: Variable = getVariable();
 
 if (variable.type === "custom-variable") {
   // Typescript will narrow `variable` down to all possible types inside this
-  // clause. In this case it's just `CustomVariable`  
+  // clause. In this case it's just `CustomVariable`
 }
 ```
 
@@ -112,7 +113,7 @@ const variable: Variable = getVariable();
 if ("query" in variable) {
   // Variable has been narrowed down to `QueryVariable |  CustomVariable`, so we
   // can act on properties that are the same on both
-  console.log("Query is", variable.query, "characters long")
+  console.log("Query is", variable.query, "characters long");
 }
 ```
 
@@ -127,10 +128,10 @@ Instead of writing functions that return a boolean type predicate (that Typescri
 ```ts
 function maybeQueryVariable(input: Variable): QueryVariable | null {
   if (input.type === "query-variable") {
-    return input
+    return input;
   }
-  
-  return null; 
+
+  return null;
 }
 ```
 
@@ -143,15 +144,15 @@ Because we've specifically annotated the return value, the type system will do t
 One specific area where these solutions don't work out is with predicate functions to `arr.filter()`. Because functions don't return their type-narrowing the following doesn't work:
 
 ```ts
-const queryVariables: QueryVariable[] = variables.filter(v => v.type === "query-variable")
+const queryVariables: QueryVariable[] = variables.filter(
+  (v) => v.type === "query-variable"
+);
 ```
 
 There's two overlapping open issues to track improvements to this:
 
-*   [Infer arrow function type guard type for specific simple cases](https://github.com/microsoft/TypeScript/issues/38390)
-    
-*   [Infer type guard => array.filter(x => !!x) should refine Array<T|null> to Array<T>](https://github.com/microsoft/TypeScript/issues/16069)
-    
+- [Infer arrow function type guard type for specific simple cases](https://github.com/microsoft/TypeScript/issues/38390)
+- [Infer type guard => array.filter(x => !!x) should refine Array<T|null> to Array<T>](https://github.com/microsoft/TypeScript/issues/16069)
 
 If you feel comfortable with the tradeoffs of user-defined type guards, you can just keep using them! However, you should limit them to small, easy to read functions that limit opportunities for mistakes to creep in. And test - they should be backed up with loads of (unit) tests to make sure they behave correctly against all possible inputs with a comprehensive set of fixtures.
 
