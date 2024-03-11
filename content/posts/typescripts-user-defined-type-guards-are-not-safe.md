@@ -5,7 +5,6 @@ description: They're commonly pointed to as a safer alternative to `as` type
 date: 2024-02-17
 published: true
 ---
-
 Occasionally I see people suggest [user-defined type guards](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates) (otherwise known as type predicates) as an safer alternative to `as` [type assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions). They'll see the following code and correctly identify that the `as` type assertions is unsafe and has the potential to introduce bugs:
 
 ```ts
@@ -24,27 +23,7 @@ This results in a function that when called, will validate and input and narrow 
 
 Unfortunately, type guards aren't actually checked by Typescript - there's no relation between pet is Dog and the implementation. It could just blindly return `true` and Typescript wouldn't care. Now all cats are dogs! User-defined type guards are a type hole that increases the chances of making a mistake and incorrectly typing data as it flows through your system. When the entire point of Typescript is to tell you where you've made a mistake, this pattern works against that.
 
-In fact, because Typescript is able to naturally narrow unions in if-statements, moving an existing check into a type guard function can _remove_ type safety. In the following code, the first example is actively checked by Typescript's type system where developer-mistakes will be caught and will catch errors as the application changes over time. The second example is susceptible to mistakes that will go uncaught until it breaks the application for users.
-
-```ts title="better.ts"
-const pet: Fish | Bird = getPet();
-
-if ("swim" in pet) {
-  // pet has been narrowed to Fish!
-}
-```
-
-```ts title="worse.ts"
-function isFish(pet: Fish | Bird): pet is Bird {
-  return "swim" in pet;
-}
-
-if (isFish(pet)) {
-  // We hope pet is Fish here, but we made a mistake when copying it
-}
-```
-
-The opportunity for introducing mistakes becomes more apparent with more realistic patterns such as discriminated union with more members with similar names.
+In fact, because Typescript is able to naturally narrow unions in if-statements, moving an existing check into a type guard function can _remove_ type safety. The following real-world example will have errors caught through type checking:
 
 ```ts
 type QueryVariable = { type: 'query-variable', ... };
@@ -59,38 +38,27 @@ type Variable =
   | CustomVariable
   | ConstantVariable;
 
-function isCustomVariable(variable: Variable): variable is CustomVariable {
-  return variable.type === "constant-variable"
+if (variable.type === "custom-variable") {
+  // variable has been narrowed to CustomVariable
+}
+```
+
+But, if we copy-paste that same check into a type guard, we'll introduce a type hole that can allow mistakes to pass through unnoticed. Can you spot where we made a mistake with auto-complete?
+
+```ts
+function isCustomVariable(variable: Variable): variable is ConstantVariable {
+  return "custom-variable" in pet;
+}
+
+if (isCustomVariable(pet)) {
+  // We hope variable is a CustomVariable, but we made a mistake when
+  // lifting the check into a separate function!
 }
 ```
 
 Again, because there's no relationship between `variable is CustomVariable` and the body of the function, Typescript isn't smart enough (yet!) to tell us that we've made a mistake here, and incorrectly checked that the argument is a `ConstantVariable`, not a `CustomVariable`
 
 So, instead of user-defined type guards, what do we do instead?
-
-## Runtime validation library
-
-Solutions such as [zod](https://zod.dev/), [io-ts](https://github.com/gcanti/io-ts), or [typia](https://typia.io/docs/validators/assert/) allow developers to validate unknown against a schema at runtime.
-
-They're most commonly used when accepting incoming untrusted data and parsing it to a known shape.
-
-```ts
-import { z } from "zod";
-
-const CustomVariable = z.object({
-  type: z.literal("custom-variable"),
-  query: z.string(),
-});
-
-const result = CustomVariable.parse({
-  type: "custom-variable",
-  query: "SELECT name FROM pets",
-});
-
-if (result.success) {
-  // We now know that result.data is a valid CustomVariable
-}
-```
 
 ## Narrowing
 
@@ -161,3 +129,5 @@ If you feel comfortable with the tradeoffs of user-defined type guards, you can 
 User-defined type guards are syntactic sugar around `as` type assertions, and thus Typescript will _trust_ that you implement them correctly and won't check them [by design](https://github.com/microsoft/TypeScript/issues/29980#issuecomment-467945410). This makes them a poor safer alternative to just plain `as`, and introduces opportunities for bugs to creep into code that can't be caught at build time.
 
 Instead, you could prefer inline narrowing checks to make sure that data is the correct shape that you expect. Or, accept the tradeoffs that user-defined type guards brings :)
+
+Runtime validation, through  solutions such as [zod](https://zod.dev/), [io-ts](https://github.com/gcanti/io-ts), or [typia](https://typia.io/docs/validators/assert/) can also be useful, but they are more typically used to parse unknown external input (such as an API response), rather than to distinguish between different parsed types.
