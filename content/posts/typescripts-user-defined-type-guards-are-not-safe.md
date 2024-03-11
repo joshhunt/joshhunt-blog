@@ -63,7 +63,6 @@ function isCustomVariable(variable: Variable): variable is CustomVariable {
 }
 ```
 
-
 So, instead of user-defined type guards, what do we do instead?
 
 ## Runtime validation library
@@ -80,7 +79,10 @@ const CustomVariable = z.object({
   query: z.string()
 });
 
-const result = CustomVariable.parse({ type: "custom-variable", query: "SELECT name FROM pets" });
+const result = CustomVariable.parse({
+  type: "custom-variable",
+  query: "SELECT name FROM pets"
+});
 
 if (result.success) {
   // We now know that result.data is a valid CustomVariable
@@ -96,8 +98,8 @@ Sometimes though your data has already been parsed, but it's still one of a few 
 const variable: Variable = getVariable();
 
 if (variable.type === "custom-variable") {
-  // Typescript will narrow `variable` down to all possible types inside this clause.
-  // In this case it's just `CustomVariable`  
+  // Typescript will narrow `variable` down to all possible types inside this
+  // clause. In this case it's just `CustomVariable`  
 }
 ```
 
@@ -107,7 +109,8 @@ While I prefer this style less, you're even able to check on implicit difference
 const variable: Variable = getVariable();
 
 if ("query" in variable) {
-  // Variable has been narrowed down to `QueryVariable |  CustomVariable`, so we can act on properties that are the same on both
+  // Variable has been narrowed down to `QueryVariable |  CustomVariable`, so we
+  // can act on properties that are the same on both
   console.log("Query is", variable.query, "characters long")
 }
 ```
