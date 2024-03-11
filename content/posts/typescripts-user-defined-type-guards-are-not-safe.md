@@ -89,7 +89,7 @@ Because this is checked by the type system, Typescript will be able to tell us i
 
 ## Parse, don't validate
 
-Sometimes though there is still value in encapsulating our check into a function that we can reuse, especially if the check is more complex (though, I argue that simple `var.type === "foo"` checks are best left inline, not split out into a function). If you squint hard enough, this problem starts to look like [parse, don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/).
+Sometimes though there is still value in encapsulating our check into a function that we can reuse, especially if the check is more complex (though, I argue that simple `var.type === "foo"` checks are best left inline). If you squint hard enough, this problem starts to look like [parse, don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/).
 
 Instead of writing functions that return a boolean type predicate (that Typescript can't check), make it (optionally) return the expected type (that Typescript _can_ check!):
 
