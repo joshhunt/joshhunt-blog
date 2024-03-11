@@ -2,7 +2,7 @@
 title: Typescript's user-defined type guards are not safe
 description: They're commonly pointed to as a safer alternative to `as` type
   assertions, but they're just as big as a type hole.
-date: 2024-02-20
+date: 2024-02-17
 published: true
 ---
 Occasionally I see people suggest [user-defined type guards](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates) (otherwise known as type predicates) as an safer alternative to `as` [type assertions](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-assertions). They'll see the following code and correctly identify that the `as` type assertions is unsafe and has the potential to introduce bugs:
@@ -141,7 +141,11 @@ Because we've specifically annotated the return value, the type system will do t
 
 ## Just keep them!
 
-One specific area where these solutions don't work out is with predicate functions to `arr.filter()`. Because functions don't return their type-narrowing 
+One specific area where these solutions don't work out is with predicate functions to `arr.filter()`. Because functions don't return their type-narrowing the following doesn't work:
+
+```ts
+const queryVariables: QueryVariable[] = variables.filter(v => v.type === "query-variable")
+```
 
 If you feel comfortable with the tradeoffs of user-defined type guards, you can just keep using them! However, you should limit them to small, easy to read functions that limit opportunities for mistakes to creep in. And test - they should be backed up with loads of (unit) tests to make sure they behave correctly against all possible inputs with a comprehensive set of fixtures.
 
