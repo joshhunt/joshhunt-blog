@@ -43,7 +43,6 @@ if (isFish(pet)) {
     // We hope pet is Fish here, but when copying it into a seperate function, we accidentally made a mistake!
 }
 ```
-
 The opportunity for introducing mistakes becomes more apparent with more realistic patterns such as discriminated union with more members with similar names.
 
 ```ts
@@ -96,6 +95,19 @@ if (variable.type === "custom-variable") {
   // In this case it's just `CustomVariable`  
 }
 ```
+
+While I prefer this style less, you're even able to check on implicit differences between objects.
+
+```ts
+const variable: Variable = getVariable();
+
+if ("query" in variable) {
+  // Variable has been narrowed down to `QueryVariable |  CustomVariable`, so we can act on properties that are the same on both
+  console.log("Query is", variable.query, "characters long")
+}
+```
+
+Because this is checked by the type system, Typescript will be able to tell us if we've made a mistake (such as mispelling a type), or if our application changes over time.
 
 
 
