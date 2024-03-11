@@ -26,7 +26,7 @@ Unfortunately, type guards aren't actually checked by Typescript - there's no re
 In fact, because Typescript is able to naturally narrow unions in if-statements, moving an existing check into a type guard function can _remove_ type safety. In the following code, the first example is actively checked by Typescript's type system where developer-mistakes will be caught and will catch errors as the application changes over time. The second example is suspectable to mistakes that will go uncaught until it breaks the application for users.
 
 
-``` title="better.ts"
+```ts title="better.ts"
 const pet: Fish | Bird = getPet();
 
 if ("swim" in pet) {
@@ -34,7 +34,7 @@ if ("swim" in pet) {
 }
 ```
 
-``` title="worse.ts"
+```ts title="worse.ts"
 function isFish(pet: Fish | Bird): pet is Bird {
     return "swim" in pet
 }
