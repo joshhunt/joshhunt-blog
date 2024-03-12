@@ -118,15 +118,17 @@ const queryVariables: QueryVariable[] = variables.filter(
 
 There's two overlapping open issues to track improvements to this:
 
-- [Infer arrow function type guard type for specific simple cases](https://github.com/microsoft/TypeScript/issues/38390)
-- [Infer type guard => array.filter(x => !!x) should refine Array<T|null> to Array<T>](https://github.com/microsoft/TypeScript/issues/16069)
+*   [Infer arrow function type guard type for specific simple cases](https://github.com/microsoft/TypeScript/issues/38390)
+    
+*   [Infer type guard => array.filter(x => !!x) should refine Array<T|null> to Array](https://github.com/microsoft/TypeScript/issues/16069)
+    
 
 If you feel comfortable with the tradeoffs of user-defined type guards, you can just keep using them! However, you should limit them to small, easy to read functions that limit opportunities for mistakes to creep in. And test - they should be backed up with loads of (unit) tests to make sure they behave correctly against all possible inputs with a comprehensive set of fixtures.
 
 ## Conclusion
 
-User-defined type guards are syntactic sugar around `as` type assertions, and thus Typescript will _trust_ that you implement them correctly and won't check them [by design](https://github.com/microsoft/TypeScript/issues/29980#issuecomment-467945410). This makes them a poor safer alternative to just plain `as`, and introduces opportunities for bugs to creep into code that can't be caught at build time.
+User-defined type guards are syntactic sugar around `as` type assertions, and thus Typescript will _trust_ that you implement them correctly and won't check them [by design](https://github.com/microsoft/TypeScript/issues/29980#issuecomment-467945410). This makes them a poor safer alternative to just plain `as`, and introduces opportunities for bugs to creep into code that can't be caught at build time. [A PR was recently opened](https://github.com/microsoft/TypeScript/pull/57465) to allow Typescript to _infer_ type guards in some cases, which should give the benefits of user-defined type guards for a lot of simple cases (especially with \`.filter()\`) without needing to use \`is\` 🎉
 
 Instead, you could prefer inline narrowing checks to make sure that data is the correct shape that you expect. Or, accept the tradeoffs that user-defined type guards brings :)
 
-Runtime validation, through  solutions such as [zod](https://zod.dev/), [io-ts](https://github.com/gcanti/io-ts), or [typia](https://typia.io/docs/validators/assert/) can also be useful, but they are more typically used to parse unknown external input (such as an API response), rather than to distinguish between different parsed types.
+Runtime validation, through solutions such as [zod](https://zod.dev/), [io-ts](https://github.com/gcanti/io-ts), or [typia](https://typia.io/docs/validators/assert/) can also be useful, but they are more typically used to parse unknown external input (such as an API response), rather than to distinguish between different parsed types.
